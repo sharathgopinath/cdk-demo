@@ -68,7 +68,7 @@ jobs:
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: /cdk-app/lib/task-def/task-definition.json
+        task-definition: cdk-app/lib/task-def/task-definition.json
         container-name: cdk-demo-container
         image: ${{ steps.build-image.outputs.image }}
 
@@ -77,5 +77,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: cdk-demo-service
-        cluster: cdk-demo-cluster
+      cluster: cdk-demo-cluster
         wait-for-service-stability: true
