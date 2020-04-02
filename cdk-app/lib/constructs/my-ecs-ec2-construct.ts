@@ -9,21 +9,22 @@ export class MyEcsEc2Construct extends cdk.Construct {
     constructor(scope: cdk.Construct, id: string) {
         super(scope, id);
 
-        const vpc = new ec2.Vpc(this, "MyVpc", {
+        const vpc = new ec2.Vpc(this, "cdk-demo-vpc", {
             maxAzs: 3 // Default is all AZs in region
         });
 
-        const cluster = new ecs.Cluster(this, "MyCluster", {
+        const cluster = new ecs.Cluster(this, "cdk-demo-cluster", {
+            clusterName: 'cdk-demo-cluster',
             vpc: vpc
         });
 
-        const taskDefinition = new ecs.FargateTaskDefinition(this, 'TaskDef', {
+        const taskDefinition = new ecs.FargateTaskDefinition(this, 'cdk-demo-task-def', {
             cpu: 256,
             executionRole: iam.Role.fromRoleArn(this, 'EcsExecutionIAMRole', 'arn:aws:iam::253347999681:role/ecsTaskExecutionRole'),
         });
 
         const repository = Repository.fromRepositoryName(this, 'EcrRepository', "cdk-demo")
-        const container = taskDefinition.addContainer('DefaultContainer', {
+        const container = taskDefinition.addContainer('cdk-demo-container', {
             image: ecs.ContainerImage.fromEcrRepository(repository, "latest"),
             memoryLimitMiB: 512,
         });
@@ -32,7 +33,8 @@ export class MyEcsEc2Construct extends cdk.Construct {
             protocol: ecs.Protocol.TCP
         });
 
-        new ecs_patterns.ApplicationLoadBalancedFargateService(this, "MyFargateService", {
+        new ecs_patterns.ApplicationLoadBalancedFargateService(this, "cdk-demo-service", {
+            serviceName: 'cdk-demo-service',
             cluster: cluster, // Required
             cpu: 512, // Default is 256
             desiredCount: 1, // Default is 1

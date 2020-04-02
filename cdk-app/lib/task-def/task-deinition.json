@@ -1,0 +1,13 @@
+{
+    "executionRoleArn": "arn:aws:iam::253347999681:role/ecsTaskExecutionRole",
+    "containerDefinitions": [{
+        "name": "cdk-demo-container",
+        "cpu": 256,
+        "portMappings": [
+            {
+                "containerPort": 80,
+                "protocol": "tcp"
+            }
+        ]
+    }]
+}
