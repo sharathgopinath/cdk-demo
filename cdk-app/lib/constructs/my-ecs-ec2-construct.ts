@@ -20,6 +20,7 @@ export class MyEcsEc2Construct extends cdk.Construct {
 
         const taskDefinition = new ecs.FargateTaskDefinition(this, 'cdk-demo-task-def', {
             cpu: 256,
+            family: 'cdk-demo',
             executionRole: iam.Role.fromRoleArn(this, 'EcsExecutionIAMRole', 'arn:aws:iam::253347999681:role/ecsTaskExecutionRole'),
         });
 

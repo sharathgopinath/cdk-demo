@@ -1,4 +1,5 @@
 {
+    "family": "cdk-demo",
     "executionRoleArn": "arn:aws:iam::253347999681:role/ecsTaskExecutionRole",
     "containerDefinitions": [{
         "name": "cdk-demo-container",
