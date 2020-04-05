@@ -49,6 +49,7 @@ jobs:
         npm run build
         npm run cdk deploy 
           --verbose
+          --require-approval never
           --context Account=253347999681
           --context AppName=cdk-demo
           --context ImageTag=$IMAGE_TAG
