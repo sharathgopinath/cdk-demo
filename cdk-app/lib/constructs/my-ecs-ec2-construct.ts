@@ -4,6 +4,7 @@ import iam = require('@aws-cdk/aws-iam');
 import ecs_patterns = require("@aws-cdk/aws-ecs-patterns");
 import cdk = require('@aws-cdk/core');
 import { Repository } from '@aws-cdk/aws-ecr';
+import { Duration } from "@aws-cdk/core";
 
 export class MyEcsEc2Construct extends cdk.Construct {
     constructor(scope: cdk.Construct, id: string) {
@@ -32,6 +33,11 @@ export class MyEcsEc2Construct extends cdk.Construct {
         const container = taskDefinition.addContainer(`${appName}-container`, {
             image: ecs.ContainerImage.fromEcrRepository(repository, imageTag),
             memoryLimitMiB: 512,
+            healthCheck:{
+                command: [ "curl -f http://localhost/health || exit 1" ],
+                interval: Duration.seconds(5),
+                retries: 3
+            }
         });
         container.addPortMappings({
             containerPort: 80,
