@@ -34,7 +34,7 @@ export class MyEcsEc2Construct extends cdk.Construct {
             image: ecs.ContainerImage.fromEcrRepository(repository, imageTag),
             memoryLimitMiB: 512,
             healthCheck:{
-                command: [ "curl -f http://localhost/health || exit 1" ],
+                command: ['curl -fail http://localhost/health || exit 1'],
                 interval: Duration.seconds(5),
                 retries: 3
             }
