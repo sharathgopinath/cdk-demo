@@ -9,24 +9,28 @@ export class MyEcsEc2Construct extends cdk.Construct {
     constructor(scope: cdk.Construct, id: string) {
         super(scope, id);
 
-        const vpc = new ec2.Vpc(this, "cdk-demo-vpc", {
+        const account = this.node.tryGetContext("Account");
+        const appName = this.node.tryGetContext("AppName");
+        const imageTag = this.node.tryGetContext("ImageTag");
+
+        const vpc = new ec2.Vpc(this, `${appName}-vpc`, {
             maxAzs: 3 // Default is all AZs in region
         });
 
-        const cluster = new ecs.Cluster(this, "cdk-demo-cluster", {
-            clusterName: 'cdk-demo-cluster',
+        const cluster = new ecs.Cluster(this, `${appName}-cluster`, {
+            clusterName: `${appName}-cluster`,
             vpc: vpc
         });
 
-        const taskDefinition = new ecs.FargateTaskDefinition(this, 'cdk-demo-task-def', {
+        const taskDefinition = new ecs.FargateTaskDefinition(this, `${appName}-task-def`, {
             cpu: 256,
-            family: 'cdk-demo',
-            executionRole: iam.Role.fromRoleArn(this, 'EcsExecutionIAMRole', 'arn:aws:iam::253347999681:role/ecsTaskExecutionRole'),
+            family: appName,
+            executionRole: iam.Role.fromRoleArn(this, 'EcsExecutionIAMRole', `arn:aws:iam::${account}:role/ecsTaskExecutionRole`),
         });
 
-        const repository = Repository.fromRepositoryName(this, 'EcrRepository', "cdk-demo")
-        const container = taskDefinition.addContainer('cdk-demo-container', {
-            image: ecs.ContainerImage.fromEcrRepository(repository, "latest"),
+        const repository = Repository.fromRepositoryName(this, `${appName}-container-repo`, appName)
+        const container = taskDefinition.addContainer(`${appName}-container`, {
+            image: ecs.ContainerImage.fromEcrRepository(repository, imageTag),
             memoryLimitMiB: 512,
         });
         container.addPortMappings({
@@ -34,8 +38,8 @@ export class MyEcsEc2Construct extends cdk.Construct {
             protocol: ecs.Protocol.TCP
         });
 
-        new ecs_patterns.ApplicationLoadBalancedFargateService(this, "cdk-demo-service", {
-            serviceName: 'cdk-demo-service',
+        new ecs_patterns.ApplicationLoadBalancedFargateService(this, `${appName}-service`, {
+            serviceName: `${appName}-service`,
             cluster: cluster, // Required
             cpu: 512, // Default is 256
             desiredCount: 1, // Default is 1
