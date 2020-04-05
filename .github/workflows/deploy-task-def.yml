@@ -1,4 +1,4 @@
-# build trigger try - 2
+# build trigger try - 3
 on:
   push:
     branches: github-action
@@ -47,7 +47,8 @@ jobs:
         cd ./cdk-app
         npm install
         npm run build
-        npm run cdk deploy 
+        npm run cdk deploy --
+          --strict
           --verbose
           --require-approval never
           --context Account=253347999681
