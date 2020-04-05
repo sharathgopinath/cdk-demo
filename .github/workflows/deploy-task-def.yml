@@ -1,4 +1,4 @@
-# build trigger try - 7
+# build trigger try - 8
 on:
   push:
     branches: github-action
