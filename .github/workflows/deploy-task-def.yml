@@ -39,15 +39,20 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+    - name: npm install
+      id: npm-install
+      run: 
+        cd ./cdk-app;
+        npm install;
+        npm run build;
+
     - name: Deploy app
       id: deploy-app
       env:
         IMAGE_TAG: ${{ github.sha }}
-      run: |
-        cd ./cdk-app
-        npm install
-        npm run build
-        npm run cdk deploy --
+      run: 
+        cd ./cdk-app;
+        npm run cdk deploy -- 
           --strict
           --verbose
           --require-approval never
