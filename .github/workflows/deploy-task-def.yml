@@ -1,4 +1,4 @@
-# build trigger try - 6
+# build trigger try - 7
 on:
   push:
     branches: github-action
@@ -19,7 +19,8 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-2
+        aws-region: 'ap-southeast-2'
+        aws-account: '253347999681'
 
     - name: Login to Amazon ECR
       id: login-ecr
