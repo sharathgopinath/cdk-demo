@@ -197,6 +197,7 @@ Below are the IAM policies that was required to deploy this project. In a produc
                 "ec2:DescribeVpnConnections",
                 "ec2:DescribeVpcPeeringConnections",
                 "ecs:CreateCluster",
+                "ecs:DeleteCluster",
                 "ec2:ResetNetworkInterfaceAttribute",
                 "ec2:CreateRouteTable",
                 "ec2:DeleteNetworkInterface",
@@ -245,7 +246,8 @@ Below are the IAM policies that was required to deploy this project. In a produc
                 "ec2:DeleteSecurityGroup",
                 "ec2:AttachNetworkInterface",
                 "ec2:EnableVpcClassicLinkDnsSupport",
-                "ec2:CreateNetworkAclEntry"
+                "ec2:CreateNetworkAclEntry",
+                "ecs:DeleteService"
             ],
             "Resource": "*"
         }

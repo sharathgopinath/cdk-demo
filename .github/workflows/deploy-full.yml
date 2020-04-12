@@ -1,7 +1,6 @@
-# build trigger try - 9
 on:
   push:
-    branches: github-action
+    branches: master
 
 name: Deploy to Amazon ECS
 
