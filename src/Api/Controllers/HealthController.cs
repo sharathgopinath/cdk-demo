@@ -17,7 +17,7 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok(new {Message="ok"});
         }
     }
 }
