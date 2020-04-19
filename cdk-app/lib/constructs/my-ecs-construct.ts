@@ -8,7 +8,7 @@ import { Duration } from "@aws-cdk/core";
 import context from '../../helpers/context';
 import {ApplicationLoadBalancer} from '@aws-cdk/aws-elasticloadbalancingv2';
 
-export class MyEcsEc2Construct extends cdk.Construct {
+export class MyEcsConstruct extends cdk.Construct {
     constructor(scope: cdk.Construct, id: string) {
         super(scope, id);
 
