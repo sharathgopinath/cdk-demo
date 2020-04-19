@@ -1,6 +1,6 @@
 on:
   push:
-    branches: master
+    branches: none #change this to your branch name
 
 name: Deploy to Amazon ECS
 
