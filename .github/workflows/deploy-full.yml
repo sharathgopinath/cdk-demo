@@ -1,0 +1,64 @@
+on:
+  push:
+    branches: master
+
+name: Deploy to Amazon ECS
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ github.sha }}
+      AWS_ACCOUNT: '253347999681'
+      AWS_REGION: 'ap-southeast-2'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        aws-account: ${{ env.AWS_ACCOUNT }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: 'cdk-demo'
+      
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: npm install
+      id: npm-install
+      run: 
+        cd ./cdk-app;
+        npm install;
+        npm run build;
+
+    - name: Deploy app
+      id: deploy-app
+
+      run: 
+        cd ./cdk-app;
+        npm run cdk deploy -- 
+          --strict
+          --verbose
+          --require-approval never
+          --context Account=253347999681
+          --context AppName=cdk-demo
+          --context ImageTag=$IMAGE_TAG

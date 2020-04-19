@@ -1,5 +1,5 @@
 {
-  "@aws-cdk/core:enableStackNameDuplicates": "true",
-  "aws-cdk:enableDiffNoFail": "true",
-  "Account": "253347999681"
+  "Account": "253347999681",
+  "AppName": "cdk-demo",
+  "ImageTag": "latest"
 }
